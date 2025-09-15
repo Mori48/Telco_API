@@ -1,0 +1,12 @@
+{
+    "type": "XGBClassifier",
+    "params": {
+        "colsample_bytree": 0.8,
+        "gamma": 0.1,
+        "learning_rate": 0.01,
+        "max_depth": 10,
+        "subsample": 0.9,
+        "scale_pos_weight": 2,
+        "n_estimators": 700
+    }
+}
