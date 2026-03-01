@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def load_model():
     try:
         logger.info('Загрузка модели')
-        model_path = os.path.join('model', 'XGB_model.joblib')
+        model_path = os.path.join('model', 'Log_Reg_model.joblib')
         model = joblib.load(model_path)
         logger.info('Модель загружена')
         return model 
@@ -22,8 +22,9 @@ def load_model():
         return None
 
 def predict_churn(new_data,model):
-    predictions = model.predict(new_data)
-    probabilities = model.predict_proba(new_data)
+    final_mddel = ThresholdOptimizer(base_model=model)
+    predictions = final_mddel.predict(new_data)
+    probabilities = final_mddel.predict_proba(new_data)
     return predictions, probabilities
 
 def make_prediction(new_data_folder = 'new_data',output_folder = 'predictions'):

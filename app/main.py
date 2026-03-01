@@ -7,7 +7,6 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 from src.predict import load_model, predict_churn, make_prediction
-from src.threshold_optimizer import ThresholdOptimizer
 import uvicorn
 
 import logging
@@ -49,6 +48,9 @@ class CustomerData(BaseModel):
     MonthlyCharges: float             # Ежемесячные charges
     TotalCharges: float               # Общие charges
 
+@app.get("/")
+def root():
+    return {"status": "ok", "service": "Telco Churn Prediction API"}
 
 @app.get("/app")
 def home():
@@ -71,8 +73,8 @@ async def predict_single(customer:CustomerData):
 @app.post("/predict/batch")
 async def predict_batch(customers: List[CustomerData]):
     try:
-        customers_dict = [customer.dict() for customer in customers]
-        new_data = pd.DataFrame(customers_dict)
+        # customers_dict = [customer for customer in customers]
+        new_data = pd.DataFrame(customers)
 
         predictions, probabilities = predict_churn(new_data, model)
         

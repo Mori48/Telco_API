@@ -1,10 +1,9 @@
 
 import joblib
 import json
-from xgboost import XGBClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 from imblearn.pipeline import Pipeline  
-from imblearn.over_sampling import SMOTE
 import logging
 import sys
 from pathlib import Path
@@ -35,18 +34,12 @@ def load_best_params(params_path='config\model.json'):
 
 
 
-def xgb_model (X_train, y_train, preprocessor,best_params):
-    xgb_params = best_params.get('params')
+def Log_Reg_model (X_train, y_train, preprocessor,best_params):
         
     logger.info('Обучение XGBoost')
-
-
-    xgb = XGBClassifier(**xgb_params, random_state=14)
-    
     pipeline = Pipeline([
     ('preprocessor', preprocessor),
-    ('smote', SMOTE(random_state=14)),
-    ('classifier', ThresholdOptimizer(xgb))
+    ('clf', LogisticRegression(**best_params))
     ])
     pipeline.fit(X_train, y_train)
     return pipeline
@@ -58,22 +51,22 @@ def train_and_save_pipeline(data_path, params_path, model_save_path):
     X_train, X_test, y_train, y_test, preprocessor = preprocessing(df)
     best_params = load_best_params(params_path)
     
-    xgb_pipline = xgb_model(X_train, y_train, preprocessor, best_params)
-    y_pred = xgb_pipline.predict(X_test)
+    pipeline = Log_Reg_model(X_train, y_train, preprocessor, best_params)
+    y_pred = pipeline.predict(X_test)
     logger.info(classification_report(y_test,y_pred))
 
-    joblib.dump(xgb_pipline,model_save_path,compress=9 )
+    joblib.dump(pipeline,model_save_path,compress=6 )
 
     logger.info("Финальная модель обучена успешно")
 
-    return xgb_pipline
+    return pipeline
 
 
 if __name__ == "__main__":
     pipeline = train_and_save_pipeline(
         data_path='data\WA_Fn-UseC_-Telco-Customer-Churn.csv',
         params_path='config\model.json', 
-        model_save_path='model\XGB_model.joblib'
+        model_save_path='model\Log_Reg_model.joblib'
     )
 
     logger.info("Обучение завершено")

@@ -1,12 +1,17 @@
 {
-    "type": "XGBClassifier",
-    "params": {
-        "colsample_bytree": 0.8,
-        "gamma": 0.1,
-        "learning_rate": 0.01,
-        "max_depth": 10,
-        "subsample": 0.9,
-        "scale_pos_weight": 2,
-        "n_estimators": 700
-    }
+    "C": 1,
+    "class_weight": "balanced",
+    "dual": false,
+    "fit_intercept": true,
+    "intercept_scaling": 1,
+    "l1_ratio": 0.6000000000000001,
+    "max_iter": 1000,
+    "multi_class": "deprecated",
+    "n_jobs": null,
+    "penalty": "elasticnet",
+    "random_state": null,
+    "solver": "saga",
+    "tol": 0.0001,
+    "verbose": 0,
+    "warm_start": false
 }
